@@ -62,12 +62,15 @@
  
 ### 2.3 签名算法
     为确保接口访问安全，接口的请求和响应应对所有参数使用对称加密算法做签名校验。请求和响应均在header中加入签名参数。
+    
 Header参数：
+
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
 | :----   | :----  | :----  | :--      | :-------------  |
-| appid |    应用唯一标识    |  varchar(15)  | Y | 时区GMT+8以秒为单位的时间戳 |
+| appid |    应用唯一标识    |  varchar(15)  | Y | - |
 | timestamp |    时间戳    |  varchar(15)  | Y | 时区GMT+8以秒为单位的时间戳 |
 | sign    |    签名    |  varchar(15)  | Y | - |
+
 签名算法：
  > * step1：把所有参数（包括appid、secret、timestamp）的key和值拼成字符串放入到数组，得到 array = ['key2=value2','key1=value1']
  > * step2：把数组按照ascii码进行升序排序，得到 array = ['key1=value1','key2=value2']
@@ -97,37 +100,38 @@ Header参数：
 ### 3.2 风控聚合模型审核下单
 接口地址：${api_domain}/api/risk/pld/create/v1
 请求参数：
+
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
 | :----   | :----  | :----  | :--      | :-------------  |
-| callback| 回调地址 |   varchar(200) | Y | |
-| clientId| 调用方下单唯一标识 | varchar(32) | Y | |
+| callback| 回调地址 |   varchar(200) | Y | - |
+| clientId| 调用方下单唯一标识 | varchar(32) | Y | - |
 | zhimaOpenId | 芝麻会员在商户端的身份标识 | varchar(30) | Y | 芝麻会员在商户端的身份标识（需要进行用户授权）|
-| idcardNum | 用户身份证号码 | varchar(20) | Y | |
-| idcardName | 用户身份证姓名 | varchar(40) | Y | |
-| phone | 用户手机号 | varchar(20) | Y | |
+| idcardNum | 用户身份证号码 | varchar(20) | Y | - |
+| idcardName | 用户身份证姓名 | varchar(40) | Y | - |
+| phone | 用户手机号 | varchar(20) | Y | - |
 | userAcount | 用户账号 | varchar(32) | Y | 下单客户的用户账号 |
-| provice | 用户收货地址-省 | varchar(20) | Y | |
-| city | 用户收货地址-市 | varchar(20) | Y | |
-| regoin | 用户收货地址-区县 | varchar(40) | Y | |
-| address | 用户收货地址-详细地址 | varchar(100) | Y | |
+| provice | 用户收货地址-省 | varchar(20) | Y | - |
+| city | 用户收货地址-市 | varchar(20) | Y | - |
+| regoin | 用户收货地址-区县 | varchar(40) | Y | - |
+| address | 用户收货地址-详细地址 | varchar(100) | Y | - |
 | country | 用户收货地址-国家 | varchar(20) | N | 默认“中华人民共和国” |
-| qq | 用户QQ号码 | varchar(20) | N | |
-| nickName | 用户常用电商平台昵称 | varchar(20) | N | |
+| qq | 用户QQ号码 | varchar(20) | N | - |
+| nickName | 用户常用电商平台昵称 | varchar(20) | N | - |
 | sex | 用户性别 | varchar(4) | N | 男；女；未知 |
-| age | 用户年龄 | int | N | |
-| ip | 用户设备IP地址 | varchar(30) | N | |
-| email | 用户电子邮箱 | varchar(100) | N | |
-| bankCard | 用户银行卡号 | varchar(30) | N | |
-| mac | 用户设备物理地址 | varchar(30) | N | |
-| wifimac | 用户设备WiFi的物理地址 | varchar(30) | N | |
+| age | 用户年龄 | int | N | - |
+| ip | 用户设备IP地址 | varchar(30) | N | - |
+| email | 用户电子邮箱 | varchar(100) | N | - |
+| bankCard | 用户银行卡号 | varchar(30) | N | - |
+| mac | 用户设备物理地址 | varchar(30) | N | - |
+| wifimac | 用户设备WiFi的物理地址 | varchar(30) | N | - |
 | imei | 用户设备标识 | varchar(30) | N | 国际移动设备标识 |
 | platform | 应用平台类型 | varchar(10) | N | 应用平台类型，h5；web；ios；android |
-| contactsName | 用户联系人姓名 | varchar(40) | N | |
-| contactsMobile | 用户联系人手机号 | varchar(20) | N | |
-| organization | 用户工作单位名称 | varchar(100) | N | |
+| contactsName | 用户联系人姓名 | varchar(40) | N | - |
+| contactsMobile | 用户联系人手机号 | varchar(20) | N | - |
+| organization | 用户工作单位名称 | varchar(100) | N | - |
 | education | 用户学历 | varchar(20) | N | 文盲或半文盲；初中；高中；中专或技校；大专；大学本科；研究生；博士 |
 | marriage | 用户婚姻状况 | varchar(10) | N | 未婚；已婚；离异；丧偶 |
-| sign | 签名 | varchar(15) | Y | |
+
 请求示例：
 ```javascript
 {
@@ -137,11 +141,13 @@ Header参数：
     "phone":"",
 }
 ```
+
 响应参数：
+
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
 | :----   | :----  | :----  | :--      | :-------------  |
-| id   | 风控订单号 | varchar(32) | Y | |
-| clientId| 调用方唯一标识 |   varchar(32) | Y | |
+| id   | 风控订单号 | varchar(32) | Y | - |
+| clientId| 调用方唯一标识 |   varchar(32) | Y | - |
 
 响应示例：
 ```
@@ -157,13 +163,15 @@ Header参数：
 ### 3.3 风控线下专家审核下单
 接口地址：${api_domain}/api/risk/offline/create/v1
 请求参数：
+
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
 | :----   | :----  | :----  | :--      | :-------------  |
-| callback| 回调地址 |   varchar(200) | Y | |
-| clientId| 调用方唯一标识 |   varchar(32) | Y | |
-| id| 风控订单号 | varchar(32) | Y |  |
-| name    |   姓名   |   varchar(20)   | Y | |
-| phone   |    手机    |  varchar(15)  | Y | |
+| callback| 回调地址 |   varchar(200) | Y | - |
+| clientId| 调用方唯一标识 |   varchar(32) | Y | - |
+| id| 风控订单号 | varchar(32) | Y | - |
+| name    |   姓名   |   varchar(20)   | Y | - |
+| phone   |    手机    |  varchar(15)  | Y | - |
+
 请求示例：
 ```javascript
 {
@@ -175,10 +183,11 @@ Header参数：
 }
 ```
 响应参数：
+
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
 | :----   | :----  | :----  | :--      | :-------------  |
-| id   | 风控订单号 | varchar(32) | Y | |
-| clientId| 调用方唯一标识 |   varchar(200) | Y | |
+| id   | 风控订单号 | varchar(32) | Y | - |
+| clientId| 调用方唯一标识 |   varchar(200) | Y | - |
 
 响应示例：
 ```
@@ -191,23 +200,26 @@ Header参数：
 接口地址：${api_domain}/api/risk/pld/query/v1
 
 请求参数：
+
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
 | :----   | :----  | :----  | :--      | :-------------  |
-| id   | 风控唯一标识 | varchar(32) | Y | |
-| clientId| 调用方唯一标识 |   varchar(200) | Y | |
+| id   | 风控唯一标识 | varchar(32) | Y | - |
+| clientId| 调用方唯一标识 |   varchar(200) | Y | - |
 
 响应参数：
+
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
 | :----   | :----  | :----  | :--      | :-------------  |
-| pldResult | 风控结果 |   varchar(10) | Y | |
-| pldScore   | 评分 | varchar(32) | Y | |
+| pldResult | 风控结果 |   varchar(10) | Y | - |
+| pldScore   | 评分 | varchar(32) | Y | - |
 | **pldDetail** | 聚合风控命中明细 |   varchar(200) | Y |[{"name":"","value":""}] |
-| --name | 命中指标名称 |   varchar(100) | Y | |
-| --value | 命中指标值 |   varchar(100) | Y | |
-| prResult|线下专家审核结果|varchar(10)|N||
+| --name | 命中指标名称 |   varchar(100) | Y | - |
+| --value | 命中指标值 |   varchar(100) | Y | - |
+| prResult|线下专家审核结果|varchar(10)|N| - |
 | **prDetail**|线下专家审核明细|varchar(200)|N|[{"name":"","value":""}]|
-| --name | 命中指标名称 |   varchar(100) | Y | |
-| --value | 命中指标值 |   varchar(100) | Y | |
+| --name | 命中指标名称 |   varchar(100) | Y | - |
+| --value | 命中指标值 |   varchar(100) | Y | - |
+
 响应示例：
 ```
 {
@@ -240,14 +252,16 @@ Header参数：
     当风控进度有变更时，机蜜风控系统会主动向调用方发起通知推送，推送间隔为（0s/2m/10m/1h/2h/6h/12h/24h），一直间隔推送8次或收到调用方接收成功的响应为止。
 接口地址：调用方提供
 请求参数：
+
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
 | :----   | :----  | :----  | :--      | :-------------  |
-| id | 风控订单号 |   varchar(10) | Y | |
-| clientId | 调用方唯一标识 |   varchar(10) | Y | |
-| pldResult | 风控聚合自动审核结果 |   varchar(10) | Y | |
-| pldScore   | 风控聚合自动审核评分 | varchar(4) | Y | |
-| prResult   | 线下专家审核结果 | varchar(10) | Y | |
-| dunResult   | 催收结果 | varchar(10) | Y | |
+| id | 风控订单号 |   varchar(10) | Y | - |
+| clientId | 调用方唯一标识 |   varchar(10) | Y | - |
+| pldResult | 风控聚合自动审核结果 |   varchar(10) | Y | - |
+| pldScore   | 风控聚合自动审核评分 | varchar(4) | Y | - |
+| prResult   | 线下专家审核结果 | varchar(10) | Y | - |
+| dunResult   | 催收结果 | varchar(10) | Y | - |
+
 请求示例：
 ```
 {
