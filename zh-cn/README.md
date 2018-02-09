@@ -1,14 +1,17 @@
 # 机蜜风控开放接口文档
 
+---
+
+[TOC]
 
 ---
 
 ## 1.概述
-机蜜聚合风控分析系统是一群金融顶尖风控专家集成了芝麻、51信用、同盾、索伦、百融、白骑士等业内知名风控数据结合大数据分析和智能机器学习的手段打造的聚合风控分析系统，对外输出贷前反欺诈和用户画像评分及用户消费形态、贷中用户消费习惯培养和多头借贷预警、贷后催收和资产处置等服务。
+机蜜聚合风控分析系统集成了芝麻、51信用、同盾、索伦、百融、白骑士等业内知名风控数据结合大数据分析和智能机器学习的手段打造的聚合风控分析系统，对外输出贷前反欺诈和用户画像评分及用户消费形态、贷中用户消费习惯培养和多头借贷预警、贷后催收和资产处置等服务。
 ### 1.1 总体架构
-![总体架构图](http://file.zpmgo.com/api/download/temp/MzRhM2I0NTMtZjJlZC00MWE5LWE3MDctNWIyOWU4ZDk5ZmExLnBuZw==)
+![总体架构图](img/str.png)
 ### 1.2 对接场景
-![时序图](http://file.zpmgo.com/api/download/temp/MTFmMjNmZWQtYzlkYS00ZmI5LTk2M2YtM2NmYWQ4YzZkN2QwLnBuZw==)
+![时序图](img/seq.png)
 ### 1.3 对接准备
  > * step1 向机蜜申请接口调用凭证信息(appid、secret、api_domain)；
  > * step2 向机蜜申请获取调试环境；（注意：测试环境为http协议，而生产环境为https协议）
@@ -72,6 +75,11 @@ Header参数：
  > * step3：把数组的元素用&拼成一个字符串，得到 source = 'key1=value1&key2=value2'
  > * step4：根据step3得到的source生成MD5加密值，并转成大写，生成签名。sign=toUpperCase(Md5(source))
  
+签名算法示例：
+以查询风控结果接口为例，该接口要求传递参数id；
+
+> * step1：生成array，array = [];
+ 
 ### 2.4 其它
  > * 所有请求和响应参数字段均为字符串格式
  > * 所有请求和响应金额参数的单位均为分
@@ -83,7 +91,18 @@ Header参数：
 
 接口地址：${api_domain}/api/open/secret/update/v1
 请求参数：无
+请求示例：
+```
+{
+}
+```
 响应参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| secret| 新的密钥 |   varchar(32) | Y | - |
+
+响应示例：
 ```javascript
 {
     "code":"200",
@@ -94,7 +113,7 @@ Header参数：
 ```
 
 ### 3.2 风控聚合模型审核下单
-接口地址：{api_domain}/api/risk/pld/create/v1
+接口地址：${api_domain}/api/risk/auto/create/v1
 请求参数：
 
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
@@ -107,7 +126,6 @@ Header参数：
 | idcardNum | 用户身份证号码 | varchar(20) | Y | - |
 | idcardName | 用户身份证姓名 | varchar(40) | Y | - |
 | phone | 用户手机号 | varchar(20) | Y | - |
-| userAcount | 用户账号 | varchar(32) | Y | 下单客户的用户账号 |
 | provice | 用户收货地址-省 | varchar(20) | Y | - |
 | city | 用户收货地址-市 | varchar(20) | Y | - |
 | regoin | 用户收货地址-区县 | varchar(40) | Y | - |
@@ -195,14 +213,21 @@ Header参数：
 }
 ```
 ### 3.4 风控结果查询
-接口地址：${api_domain}/api/risk/pld/query/v1
+接口地址：${api_domain}/api/risk/auto/query/v1
 
 请求参数：
 
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
 | :----   | :----  | :----  | :--      | :-------------  |
-| id   | 风控唯一标识 | varchar(32) | Y | - |
-| clientId| 调用方唯一标识 | varchar(200) | Y | - |
+| id   | 风控唯一标识 | varchar(32) | N | 两者不能同时为空 |
+| clientId| 调用方唯一标识 | varchar(200) | N | 两者不能同时为空 |
+
+请求示例：
+```
+{
+    "id":"0000001"
+}
+```
 
 响应参数：
 
@@ -210,11 +235,11 @@ Header参数：
 | :----   | :----  | :----  | :--      | :-------------  |
 | pldResult | 风控结果 |   varchar(10) | Y | - |
 | pldScore   | 评分 | varchar(32) | Y | - |
-| **pldDetail** | 聚合风控命中明细 |   varchar(200) | Y |[{"name":"","value":""}] |
+| **pldDetail** | 聚合风控命中明细 | [{}] | Y |[{"name":"","value":""}] |
 | --name | 命中指标名称 |   varchar(100) | Y | - |
 | --value | 命中指标值 |   varchar(100) | Y | - |
 | prResult|线下专家审核结果|varchar(10)|N| - |
-| **prDetail**|线下专家审核明细|varchar(200)|N|[{"name":"","value":""}]|
+| **prDetail**|线下专家审核明细| [{}] |N|[{"name":"","value":""}]|
 | --name | 命中指标名称 |   varchar(100) | Y | - |
 | --value | 命中指标值 |   varchar(100) | Y | - |
 
@@ -223,15 +248,15 @@ Header参数：
 {
     "code":"200",
     "data":{
-        "pldResult":"pass"
-        "pldScore":"85"
+        "pldResult":"pass",
+        "pldScore":"85",
         "pldDetail":[
         {
             "name":"芝麻分",
             "value":"700"
         }
         ],
-        "prResult":""
+        "prResult":"",
         "prDetail":[
         {
             "name":"身份证号和上传的身份证是否一致",
@@ -254,17 +279,17 @@ Header参数：
 
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
 | :----   | :----  | :----  | :--      | :-------------  |
-| id | 风控订单号 |   varchar(10) | Y | - |
-| clientId | 调用方唯一标识 |   varchar(10) | Y | - |
+| id | 风控订单号 |   varchar(32) | Y | - |
+| clientId | 调用方唯一标识 |   varchar(32) | Y | - |
 | pldResult | 风控聚合自动审核结果 |   varchar(10) | Y | - |
 | pldScore   | 风控聚合自动审核评分 | varchar(4) | Y | - |
 | prResult   | 线下专家审核结果 | varchar(10) | Y | - |
-| dunResult   | 催收结果 | varchar(10) | Y | - |
 
 请求示例：
 ```
 {
     "id":"00000000001",
+    "clientId":"00000000001",
     "pldResult":"pass",
     "pldScore":"85",
     "prResult":"pass"
@@ -277,8 +302,158 @@ SUCCESS
 ```
 
 ### 3.6 催收下单
+接口地址：${api_domain}/api/risk/dun/create/v1
+请求参数：
 
-### 3.7 催收还款情况上传
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :-----   | :-----  | :----  | :--      | :-------------  |
+| clientId| 调用方唯一标识 | varchar(32) | Y | - |
+| subject| 账单主体名称 | varchar(200) | Y | - |
+| contact| 账单联系人 | varchar(200) | Y | - |
+| phone| 账单联系手机 | varchar(200) | Y | - |
+| num| 账单期数 | varchar(3) | Y | - |
+| amount| 账单总金额 | varchar(12) | Y | 以分为单位 |
+| payAmount| 账单已还款总金额 | varchar(12) | Y | 以分为单位 |
+| beginTime| 账单产生时间 | varchar(10) | Y | 以秒为单位的时间戳 |
+| endTime| 账单到期时间 | varchar(10) | Y | 以秒为单位的时间戳 |
+| state| 当前状态 | varchar(2) | Y |0为未到期；1为已逾期；1为逾期后部分还款；2为全部还清； |
+| callback | 回调通知地址| varchar(200) | Y |  |
+| extend | 预留扩展参数| varchar(200) | N | json格式字符串 |
+| **detail** | 账期详情 | {} | Y | 以秒为单位的时间戳 |
+| --no | 账期序号 | varchar(3) | Y |  |
+| --endTime | 账期应还时间 | varchar(3) | Y | 以秒为单位的时间戳 |
+| --amount | 账期金额 | varchar(3) | Y | 以分为单位 |
+| --payTime | 账期实际还款时间 | varchar(3) | N | 以秒为单位的时间戳 |
+| --payAmount | 账期已还款金额 | varchar(3) | Y | 以分为单位 |
+
+请求示例：
+```
+{
+    "clientId":""
+}
+```
+
+响应参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| id   | 催收唯一标识 | varchar(32) | Y | - |
+| clientId| 调用方唯一标识 | varchar(200) | Y | - |
+
+响应示例：
+```
+{
+    "code":"200",
+    "data":{
+        "id":"000000000000000000001",
+        "clientId":"000000000000000000001"
+    }
+}
+```
+
+
+### 3.7 催收还款情况更新
+接口地址：${api_domain}/api/risk/dun/update/v1
+请求参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :-----   | :-----  | :----  | :--      | :-------------  |
+| id| 催收唯一标识 | varchar(32) | Y | - |
+| clientId| 调用方唯一标识 | varchar(32) | Y | - |
+| payAmount| 账单已还款总金额 | varchar(12) | Y | 以分为单位 |
+| state| 当前状态 | varchar(2) | Y |0为未到期；1为已逾期；1为逾期后部分还款；2为全部还清； |
+| **detail** | 账期详情 | {} | Y | 以秒为单位的时间戳 |
+| --no | 账期序号 | varchar(3) | Y |  |
+| --payTime | 账期实际还款时间 | varchar(3) | N | 以秒为单位的时间戳 |
+| --payAmount | 账期已还款金额 | varchar(3) | Y | 以分为单位 |
+
+请求示例：
+```
+{
+    "clientId":""
+}
+```
+
+响应参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| id   | 催收唯一标识 | varchar(32) | Y | - |
+| clientId| 调用方唯一标识 | varchar(200) | Y | - |
+
+响应示例：
+```
+{
+    "code":"200",
+    "data":{
+        "id":"000000000000000000001",
+        "clientId":"000000000000000000001"
+    }
+}
+```
+
+### 3.8 催收结果查询
+接口地址：${api_domain}/api/risk/dun/query/v1
+
+请求参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| id   | 催收唯一标识 | varchar(32) | Y | - |
+| clientId| 调用方唯一标识 | varchar(200) | Y | - |
+
+请求示例：
+```
+{
+    "id":"0000001"
+}
+```
+
+响应参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| dunResult | 催收结果 |   varchar(10) | Y | - |
+| dunDes | 催收描述 |   varchar(10) | Y | - |
+
+响应示例：
+```
+{
+    "code":"200",
+    "data":{
+        "dunResult":"0",
+        "dunDes":"用户承诺2018-01-06日还款"
+    }
+}
+```
+
+### 3.9 催收进度通知推送
+当催收进度有变更时，机蜜催收系统会主动向调用方发起通知推送，推送间隔为（0s/2m/10m/1h/2h/6h/12h/24h），一直间隔推送8次或收到调用方接收成功的响应为止。
+
+接口地址：调用方提供
+请求参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| id | 风控订单号 |   varchar(10) | Y | - |
+| clientId | 调用方唯一标识 |   varchar(10) | Y | - |
+| dunResult   | 催收结果 | varchar(10) | Y | - |
+| dunDes | 催收描述 |   varchar(10) | Y | - |
+
+请求示例：
+```
+{
+    "id":"00000000001",
+    "clientId":"00000000001",
+    "dunResult":"0",
+    "dunDes":"用户承诺2018-01-06日还款"
+}
+```
+响应参数：字符串
+响应示例：
+```
+SUCCESS
+```
 
 ## 4.错误代码
 
