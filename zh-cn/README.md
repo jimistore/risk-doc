@@ -75,10 +75,6 @@ Header参数：
  > * step3：把数组的元素用&拼成一个字符串，得到 source = 'key1=value1&key2=value2'
  > * step4：根据step3得到的source生成MD5加密值，并转成大写，生成签名。sign=toUpperCase(Md5(source))
  
-签名算法示例：
-以查询风控结果接口为例，该接口要求传递参数id；
-
-> * step1：生成array，array = [];
  
 ### 2.4 其它
  > * 所有请求和响应参数字段均为字符串格式
@@ -89,7 +85,7 @@ Header参数：
 ### 3.1 更新密钥接口
 为避免密钥泄露导致安全事故，对接方应定期调用此接口更新密钥。
 
-接口地址：${api_domain}/api/open/secret/update/v1
+接口地址：${api_domain}/api/open/secret/update/v1 
 请求参数：无
 请求示例：
 ```
@@ -112,8 +108,88 @@ Header参数：
 }
 ```
 
-### 3.2 风控聚合模型审核下单
-接口地址：${api_domain}/api/risk/auto/create/v1
+###  3.2获取芝麻PASS认证授权地址
+接口地址：${api_domain}/api/risk/zmpass/grant/v1 
+请求参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| appType | 支付宝应用标识 |   varchar(10) | Y | migu／jimi |
+| soureType | 访问来源 |   varchar(10) | Y | APP／H5 |
+| channel | 渠道 |   varchar(20) | Y | alipay |
+| callBackUrl | 授权后回调地址 |   varchar(200) | Y | - |
+
+请求示例：
+```javascript
+{
+    "appType": "migu",
+    "soureType": "h5",
+    "channel": "alipay",
+    "callBackUrl": "http://www.jimistore.com/pass/grant.html"
+}
+```
+
+响应参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| url | 芝麻PASS认证授权地址 | varchar(200) | Y | - |
+
+响应示例：
+```
+{
+    "code": "200",
+    "data": {
+        "url": "https://zmhatcher.zmxy.com.cn/creditlife/operatorEntrance.htm?productId=xxxxxx&channel=alipay&callBackUrl=http%3A%2F%2Fwww.jimistore.com%2Fpass%2Fgrant.html"
+    }
+}
+```
+获取到“芝麻PASS认证授权地址”之后，需要对接方自行访问打开。
+
+
+
+###  3.3获取芝麻PASS认证信息
+接口地址：${api_domain}/api/risk/zmpass/confirm/v1 
+请求参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| appType | 支付宝应用标识 |   varchar(10) | Y | migu／jimi |
+| channelName | 访问来源 |   varchar(20) | Y | 访问的来源渠道 |
+| orderNo |	pass认证订单号 |   varchar(50) | Y | - |
+
+
+请求示例：
+```javascript
+{
+    "appType": "migu",
+    "channelName": "1",
+    "orderNo": "1"
+}
+```
+
+响应参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| userId | 机蜜用户唯一标识 | varchar(32) | Y | - |
+| passId | pass数据唯一标识 | varchar(32) | Y | - |
+| zmScore | 芝麻信用分 | varchar(10) | Y | - |
+
+响应示例：
+```
+{
+    "code": "200",
+    "data": {
+        "userId": "123",
+        "passId":"123",
+        "zmScore":"777"
+    }
+}
+```
+
+### 3.4 风控聚合模型审核下单
+接口地址：${api_domain}/api/risk/auto/create/v1 
 请求参数：
 
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
@@ -122,9 +198,10 @@ Header参数：
 | clientId| 调用方下单唯一标识 | varchar(32) | Y | - |
 | productId| 风控产品唯一标识 | varchar(32) | Y | 目前只支持pld |
 | strategyId| 风控策略唯一标识 | varchar(32) | Y | - |
-| zhimaOpenId | 芝麻会员在商户端的身份标识 | varchar(30) | Y | 芝麻会员在商户端的身份标识（需要进行用户授权）|
-| idcardNum | 用户身份证号码 | varchar(20) | Y | - |
-| idcardName | 用户身份证姓名 | varchar(40) | Y | - |
+| authId | 授权ID | varchar(30) | Y | 芝麻的passId 或 京东小白分openId |
+| channel | 授权渠道 | varchar(10) | Y | alipay / wechat |
+| idcardNum | 用户身份证号码 | varchar(20) | N | 当渠道为非alipay时，该参数不能为空 |
+| idcardName | 用户身份证姓名 | varchar(40) | N | 当渠道为非alipay时，该参数不能为空 |
 | phone | 用户手机号 | varchar(20) | Y | - |
 | provice | 用户收货地址-省 | varchar(20) | Y | - |
 | city | 用户收货地址-市 | varchar(20) | Y | - |
@@ -176,8 +253,8 @@ Header参数：
 }
 ```
 
-### 3.3 风控线下专家审核下单
-接口地址：${api_domain}/api/risk/offline/create/v1
+### 3.5 风控线下专家审核下单
+接口地址：${api_domain}/api/risk/offline/create/v1 
 请求参数：
 
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
@@ -212,8 +289,8 @@ Header参数：
     "data":"success"
 }
 ```
-### 3.4 风控结果查询
-接口地址：${api_domain}/api/risk/auto/query/v1
+### 3.6 风控结果查询
+接口地址：${api_domain}/api/risk/auto/query/v1 
 
 请求参数：
 
@@ -271,7 +348,7 @@ Header参数：
 }
 ```
 
-### 3.5 风控进度通知推送
+### 3.7 风控进度通知推送
 当风控进度有变更时，机蜜风控系统会主动向调用方发起通知推送，推送间隔为（0s/2m/10m/1h/2h/6h/12h/24h），一直间隔推送8次或收到调用方接收成功的响应为止。
 
 接口地址：调用方提供
@@ -301,8 +378,8 @@ Header参数：
 SUCCESS
 ```
 
-### 3.6 催收下单
-接口地址：${api_domain}/api/risk/dun/create/v1
+### 3.8 催收下单
+接口地址：${api_domain}/api/risk/dun/create/v1 
 请求参数：
 
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
@@ -352,8 +429,8 @@ SUCCESS
 ```
 
 
-### 3.7 催收还款情况更新
-接口地址：${api_domain}/api/risk/dun/update/v1
+### 3.9 催收还款情况更新
+接口地址：${api_domain}/api/risk/dun/update/v1 
 请求参数：
 
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
@@ -392,8 +469,8 @@ SUCCESS
 }
 ```
 
-### 3.8 催收结果查询
-接口地址：${api_domain}/api/risk/dun/query/v1
+### 3.10 催收结果查询
+接口地址：${api_domain}/api/risk/dun/query/v1 
 
 请求参数：
 
@@ -427,7 +504,7 @@ SUCCESS
 }
 ```
 
-### 3.9 催收进度通知推送
+### 3.11 催收进度通知推送
 当催收进度有变更时，机蜜催收系统会主动向调用方发起通知推送，推送间隔为（0s/2m/10m/1h/2h/6h/12h/24h），一直间隔推送8次或收到调用方接收成功的响应为止。
 
 接口地址：调用方提供
