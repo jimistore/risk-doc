@@ -221,7 +221,7 @@ Header参数：
 | organization | 用户工作单位名称 | varchar(100) | N | - |
 | education | 用户学历 | varchar(20) | N | 文盲或半文盲；初中；高中；中专或技校；大专；大学本科；研究生；博士 |
 | marriage | 用户婚姻状况 | varchar(10) | N | 未婚；已婚；离异；丧偶 |
-| extend | 三方独有数据 | varchar(1000) | N | 扩展数据(三方独有数据)；json格式；作用：配合策略规则评分 |
+| extend | 业务方独有数据源 | varchar(1000) | N | 扩展数据(三方独有数据)；json格式；作用：配合策略规则评分 |
 
 请求示例：
 ```javascript
@@ -230,6 +230,10 @@ Header参数：
     "clientId":"",
     "name":"",
     "phone":"",
+    "extend":{
+    	"jm_huabei_disabled":"true",
+    	"jm_tongxunlu_uploaded":"true"
+    }
 }
 ```
 
