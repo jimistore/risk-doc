@@ -195,10 +195,12 @@ Header参数：
 | clientId| 调用方下单唯一标识 | varchar(32) | Y | - |
 | productId| 风控产品唯一标识 | varchar(32) | Y | 目前只支持pld |
 | strategyId| 风控策略唯一标识 | varchar(32) | Y | - |
-| authId | 授权ID | varchar(30) | Y | 芝麻的passId 或 京东小白分openId |
-| channel | 授权渠道 | varchar(10) | Y | alipay / wechat |
-| idcardNum | 用户身份证号码 | varchar(20) | N | 当渠道为非alipay时，该参数不能为空 |
-| idcardName | 用户身份证姓名 | varchar(40) | N | 当渠道为非alipay时，该参数不能为空 |
+| sceneType| 渠道场景 | varchar(30) | Y |  |
+| liveType| 授权认证类型 | varchar(20) | Y | pass;faceId;jdjr;other |
+| authId | 授权ID | varchar(30) | N | passId;faceId;jdOpenId |
+| channel | 授权渠道 | varchar(10) | N | 授权渠道(备用) |
+| idcardNum | 用户身份证号码 | varchar(20) | Y | - |
+| idcardName | 用户身份证姓名 | varchar(40) | Y | - |
 | phone | 用户手机号 | varchar(20) | Y | - |
 | provice | 用户收货地址-省 | varchar(20) | Y | - |
 | city | 用户收货地址-市 | varchar(20) | Y | - |
@@ -314,11 +316,13 @@ Header参数：
 | :----   | :----  | :----  | :--      | :-------------  |
 | pldResult | 风控结果 |   varchar(10) | Y | - |
 | pldScore   | 评分 | varchar(32) | Y | - |
-| **pldDetail** | 聚合风控命中明细 | [{}] | Y |[{"name":"","value":""}] |
+| **pldDetail** | 聚合风控命中明细 | [{}] | Y |[{"id":"","name":"","value":""}] |
+| --id | 命中指标id标识 |   varchar(32) | Y | - |
 | --name | 命中指标名称 |   varchar(100) | Y | - |
 | --value | 命中指标值 |   varchar(100) | Y | - |
 | prResult|线下专家审核结果|varchar(10)|N| - |
-| **prDetail**|线下专家审核明细| [{}] |N|[{"name":"","value":""}]|
+| **prDetail**|线下专家审核明细| [{}] |N|[{"id":"","name":"","value":""}]|
+| --id | 命中指标id标识 |   varchar(32) | Y | - |
 | --name | 命中指标名称 |   varchar(100) | Y | - |
 | --value | 命中指标值 |   varchar(100) | Y | - |
 
@@ -331,6 +335,7 @@ Header参数：
         "pldScore":"85",
         "pldDetail":[
         {
+            "id":"1",
             "name":"芝麻分",
             "value":"700"
         }
@@ -338,10 +343,12 @@ Header参数：
         "prResult":"",
         "prDetail":[
         {
+            "id":"2",
             "name":"身份证号和上传的身份证是否一致",
             "value":"否"
         },
         {
+            "id":"2",
             "name":"手机号和上传的手机号是否一致",
             "value":"否"
         }
