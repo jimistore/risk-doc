@@ -195,7 +195,7 @@ Header参数：
 | clientId| 调用方下单唯一标识 | varchar(32) | Y | - |
 | productId| 风控产品唯一标识 | varchar(32) | Y | 目前只支持pld |
 | strategyId| 风控策略唯一标识 | varchar(32) | Y | - |
-| sceneType| 渠道场景 | varchar(30) | Y |  |
+| sceneType| 渠道场景 | varchar(30) | Y | - |
 | liveType| 授权认证类型 | varchar(20) | Y | pass;faceId;jdjr;other |
 | authId | 授权ID | varchar(30) | N | passId;faceId;jdOpenId |
 | channel | 授权渠道 | varchar(10) | N | 授权渠道(备用) |
@@ -406,7 +406,7 @@ SUCCESS
 | callback | 回调通知地址| varchar(200) | Y |  |
 | extend | 预留扩展参数| varchar(200) | N | json格式字符串 |
 | **detail** | 账期详情 | {} | Y | 以秒为单位的时间戳 |
-| --no | 账期序号 | varchar(3) | Y |  |
+| --no | 账期序号 | varchar(3) | Y | - |
 | --endTime | 账期应还时间 | varchar(3) | Y | 以秒为单位的时间戳 |
 | --amount | 账期金额 | varchar(3) | Y | 以分为单位 |
 | --payTime | 账期实际还款时间 | varchar(3) | N | 以秒为单位的时间戳 |
