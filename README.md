@@ -199,6 +199,7 @@ Header参数：
 | liveType| 授权认证类型 | varchar(20) | Y | pass;faceId;jdjr;other |
 | authId | 授权ID | varchar(30) | N | passId;faceId;jdOpenId |
 | channel | 授权渠道 | varchar(10) | N | 授权渠道(备用) |
+| zmAccessToken | 芝麻授权Token | varchar(100) | Y | 芝麻授权accessToken；为空时不获取芝麻行业关注名单相关数据 |
 | idcardNum | 用户身份证号码 | varchar(20) | Y | - |
 | idcardName | 用户身份证姓名 | varchar(40) | Y | - |
 | phone | 用户手机号 | varchar(20) | Y | - |
@@ -315,6 +316,7 @@ Header参数：
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
 | :----   | :----  | :----  | :--      | :-------------  |
 | pldResult | 风控结果 |   varchar(10) | Y | - |
+| pldMsg   | 风控异常信息 | varchar(200) | Y | - |
 | pldScore   | 评分 | varchar(32) | Y | - |
 | **pldDetail** | 聚合风控命中明细 | [{}] | Y |[{"id":"","name":"","value":""}] |
 | --id | 命中指标id标识 |   varchar(32) | Y | - |
@@ -368,6 +370,7 @@ Header参数：
 | id | 风控订单号 |   varchar(32) | Y | - |
 | clientId | 调用方唯一标识 |   varchar(32) | Y | - |
 | pldResult | 风控聚合自动审核结果 |   varchar(10) | Y | - |
+| pldMsg   | 风控异常信息 | varchar(200) | Y | - |
 | pldScore   | 风控聚合自动审核评分 | varchar(4) | Y | - |
 | prResult   | 线下专家审核结果 | varchar(10) | Y | - |
 
