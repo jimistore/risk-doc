@@ -196,8 +196,8 @@ Header参数：
 | productId| 风控产品唯一标识 | varchar(32) | Y | 目前只支持pld |
 | strategyId| 风控策略唯一标识 | varchar(32) | Y | - |
 | sceneType| 渠道场景 | varchar(30) | Y | - |
-| liveType| 授权认证类型 | varchar(20) | Y | pass;faceId;jdjr;other |
-| authId | 授权ID | varchar(30) | N | passId;faceId;jdOpenId |
+| liveType| 授权认证类型 | varchar(20) | Y | pass;faceId;jdjr;tencent;other |
+| authId | 授权ID | varchar(30) | N | passId;faceId;jdOpenId;tencentId |
 | channel | 授权渠道 | varchar(10) | N | 授权渠道(备用) |
 | zmAccessToken | 芝麻授权Token | varchar(100) | N | 芝麻授权accessToken；liveType为pass时不能为空 |
 | idcardNum | 用户身份证号码 | varchar(20) | Y | - |
