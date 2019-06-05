@@ -419,6 +419,7 @@ SUCCESS
 | reviewResult | 人审审核结果 |   varchar(10) | Y | auditPass-人审通过；auditRefuse-人审拒绝；auditCancel-人审取消；auditContactAgain-人审需再次联系；supplementInfo-需完善信息 |
 | reviewDate | 人审审核时间 |   datetime | Y | - |
 | reviewRemark   | 人审备注信息 | varchar(200) | N | - |
+| enterpriseCredit   | 企业授信额度 | bigint | N | - |
 
 请求示例：
 
