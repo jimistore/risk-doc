@@ -67,17 +67,17 @@ Header参数：
 | :----   | :----  | :----  | :--      | :-------------  |
 | appId |    应用唯一标识    |  varchar(32)  | Y | - |
 | timestamp |    时间戳    |  varchar(32)  | Y | 时区GMT+8以秒为单位的时间戳 |
-| deviceId |    设备标识    |  varchar(32)  | Y | - |
-| OSVersion |    系统版本   |  varchar(32)  | Y | - |
+| deviceId |    设备标识    |  varchar(32)  | Y | 设备唯一标识 |
+| OSVersion |    系统版本   |  varchar(32)  | Y | 系统版本号 |
 | userId |    用户id   |  varchar(32)  | Y | - |
-| signature    |    签名    |  varchar(32)  | Y | - |
+| sign   |    签名    |  varchar(32)  | Y | - |
 
 签名算法：
 
- > * step1：把参数（appId，password，timestamp，deviceId，OSVersion，userId）的key和值value拼成字符串放入到数组，得到 array = ['value2=key2','value1=key1']
- > * step2：把数组按照ascii码进行升序排序，得到 array = ['value1=key1','value2=key2']
- > * step3：把数组的元素用&拼成一个字符串，得到 source = 'value1=key1&value2=key2'
- > * step4：根据step3得到的source生成MD5加密值，并转成大写，生成签名。signature=toUpperCase(Md5(source))
+ > * step1：把参数（appId，password，timestamp，deviceId，OSVersion，userId，body）的key和值value拼成字符串放入到数组，（其中body值是请求body进行Base64.encodeBase64String转化的结果），得到 array = ['key2=value2','key1=value1']
+ > * step2：把数组按照ascii码进行升序排序，得到 array = ['key1=value1','key2=value2']
+ > * step3：把数组的元素用&拼成一个字符串，得到 source = 'key1=value1&key2=value2'
+ > * step4：根据step3得到的source生成MD5加密值，并转成大写，生成签名。sign=toUpperCase(Md5(source))
 
 
 ### 2.4 其它
