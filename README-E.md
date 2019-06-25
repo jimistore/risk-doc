@@ -197,7 +197,7 @@ Header参数：
 ### 3.4 风控聚合模型审核下单
 风控审核下单。
 
-接口地址：${api_domain}/api/risk/proxy/create/v1
+接口地址：${api_domain}/api/lease/enterprise/risk/order/create/v1
 
 请求参数：
 
@@ -302,7 +302,7 @@ SUCCESS
 
 
 ### 3.6 风控结果查询
-接口地址：${api_domain}/api/risk/proxy/query/v1
+接口地址：${api_domain}/api/lease/enterprise/risk/order/query/v1
 
 请求参数：
 
@@ -351,6 +351,7 @@ SUCCESS
 | callback| 回调地址 |   varchar(200) | Y | - |
 | transactionId| 事务id |   varchar(50) | Y | - |
 | clientId| 调用方唯一标识 |   varchar(50) | Y | - |
+| riskOrderId| 风控订单id |   varchar(50) | Y | - |
 | userId    |   下单用户唯一标识   |   varchar(50)   | Y | - |
 | name    |   下单用户姓名   |   varchar(50)   | Y | - |
 | phone   |    下单用户手机    |  varchar(15)  | Y | - |
@@ -365,6 +366,7 @@ SUCCESS
     "callback":"",
     "transactionId":"",
     "clientId":"",
+    "riskOrderId":"",
     "userId":"",
     "name":"",
     "phone":"",
