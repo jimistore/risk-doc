@@ -584,6 +584,8 @@ SUCCESS
 | 企业认证节点	   | enterpriseVerifyNode | - |
 | 法人认证节点	   | legalPersonVerifyNode  | - |
 | 经办人认证节点	   | agentPersonVerifyNode | - |
+| 芝麻存证链实人节点	   | zhimaShirenVerifyNode | 2019-08-26新增 |
+| 芝麻存证链企业认证节点	   | zhimaEnterpriseVerifyNode | 2019-08-26新增 |
 
 认证流程结果约定（flowResult）：
 
@@ -715,6 +717,107 @@ extend详情：
 | resultMessage   | 结果内容 | varchar(200) |  - |
 | nextNodeType   | 下一个认证节点类型标识 | varchar(50) |  见认证节点约定 |
 | nextNodeId   | 下一个认证节点id | varchar(32) |  - |
+
+
+### 3.12.5 芝麻存证链企业认证节点-初始化接口
+接口地址：${api_domain}/api/risk/identity/verify/identityNode/zhimaEnterpriseCertify/init/v1
+
+请求参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| transactionId   | 事务id | varchar(50) | Y | - |
+| userId   | 用户id | varchar(50) | Y | - |
+| authType   | 认证类型 | varchar(20) | Y | 值为：PC_AUTH |
+| regNo   | 注册号或统一信用代码 | varchar(50) | Y | - |
+| companyName   | 公司名 | varchar(100) | Y | - |
+| frCertNo   | 法人证件号码 | varchar(20) | Y | - |
+| frName   | 法人姓名 | varchar(100) | Y | - |
+| callbackUrl   | 返回页面 | varchar(200) | Y | - |
+| appId   | 应用id | varchar(50) |  | - |
+
+响应参数：
+
+| 名称    | 含义   |  类型  | 备注            |
+| :----   | :----  | :----  |  :-------------  |
+| transactionId   | 事务id| varchar(50) |  - |
+| bizNo   | 认证id | varchar(50) |  - |
+| certifyUrl   | 认证URL | varchar(500) |  - |
+
+
+### 3.12.6 芝麻存证链企业认证节点-提交接口
+接口地址：${api_domain}/api/risk/identity/verify/zhimaEnterpriseCertifyNode/v1
+
+请求参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| transactionId   | 事务id | varchar(50) | Y | - |
+| flowId   | 认证流程id | varchar(50) | Y | - |
+| nodeId   | 认证节点id | varchar(50) | Y | - |
+| userId   | 用户id | varchar(50) | Y | - |
+
+响应参数：
+
+| 名称    | 含义   |  类型  | 备注            |
+| :----   | :----  | :----  |  :-------------  |
+| transactionId   | 事务id| varchar(50) |  - |
+| flowId   | 认证流程id | varchar(32) |  - |
+| flowResult   | 认证流程结果	 | varchar(32) |  见认证流程结果约定 |
+| nodeResult   | 认证节点结果	 | varchar(32) |  见认证节点结果约定 |
+| resultMessage   | 结果内容 | varchar(200) |  - |
+| nextNodeType   | 下一个认证节点类型标识 | varchar(50) |  见认证节点约定 |
+| nextNodeId   | 下一个认证节点id | varchar(32) |  - |
+
+
+### 3.12.7 芝麻存证链实人节点-初始化接口
+接口地址：${api_domain}/api/risk/identity/verify/identityNode/zhimaShirenCertify/init/v1
+
+请求参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| transactionId   | 事务id | varchar(50) | Y | - |
+| userId   | 用户id | varchar(50) | Y | - |
+| authType   | 认证类型 | varchar(20) | Y | 值为：PC_AUTH |
+| idcardNum   | 身份证号 | varchar(20) | Y | - |
+| idcardName   | 身份证姓名 | varchar(50) | Y | - |
+| callbackUrl   | 返回页面 | varchar(200) | Y | - |
+
+响应参数：
+
+| 名称    | 含义   |  类型  | 备注            |
+| :----   | :----  | :----  |  :-------------  |
+| transactionId   | 事务id| varchar(50) |  - |
+| certifyId   | 认证id | varchar(50) |  - |
+| certifyUrl   | 认证URL | varchar(500) |  - |
+
+
+### 3.12.8 芝麻存证链实人节点-提交接口
+接口地址：${api_domain}/api/risk/identity/verify/zhimaShirenCertifyNode/v1
+
+请求参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| transactionId   | 事务id | varchar(50) | Y | - |
+| flowId   | 认证流程id | varchar(50) | Y | - |
+| nodeId   | 认证节点id | varchar(50) | Y | - |
+| userId   | 用户id | varchar(50) | Y | - |
+
+响应参数：
+
+| 名称    | 含义   |  类型  | 备注            |
+| :----   | :----  | :----  |  :-------------  |
+| transactionId   | 事务id| varchar(50) |  - |
+| flowId   | 认证流程id | varchar(32) |  - |
+| flowResult   | 认证流程结果	 | varchar(32) |  见认证流程结果约定 |
+| nodeResult   | 认证节点结果	 | varchar(32) |  见认证节点结果约定 |
+| resultMessage   | 结果内容 | varchar(200) |  - |
+| nextNodeType   | 下一个认证节点类型标识 | varchar(50) |  见认证节点约定 |
+| nextNodeId   | 下一个认证节点id | varchar(32) |  - |
+
+
 
 
 ## 4.错误代码
