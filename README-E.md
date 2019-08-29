@@ -620,8 +620,18 @@ extend详情：
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
 | :----   | :----  | :----  | :--      | :-------------  |
 | isEnterprise   | 是否是企业租赁 | int | Y | 0-否；1-是 |
-| personType   | 身份 | varchar(20) | Y | legal-法人；agent-经办人 |
+| personType   | 身份 | varchar(20) | Y | legal-法人；agent-经办人； |
+| identityFlow   | 认证流程 | varchar(100) | Y | legalFlow-法人流程；agentFlow-经办人流程；onlyAgentFlow-单独经办人流程；legalZhimaEnterpriseFlow-法人芝麻企业流程；agentZhimaShirenFlow-经办人芝麻实人流程； |
 
+identityFlow流程详情：
+
+| 标识    | 含义   |  流程  | 
+| :----   | :----  | :------------  | 
+| legalFlow  |  法人流程 | 法人--企业  | 
+| agentFlow  |  经办人流程 |  法人--经办人--企业 | 
+| onlyAgentFlow  |  单独经办人流程 | 经办人 | 
+| legalZhimaEnterpriseFlow  |  法人芝麻企业流程 | 法人--芝麻存证链企业认证  | 
+| agentZhimaShirenFlow  |  经办人芝麻实人流程 | 法人--经办人--企业--芝麻存证链实人认证 | 
 
 响应参数：
 
