@@ -337,7 +337,7 @@ SUCCESS
 ### 3.7 风控线下专家审核下单
 线下人审审核下单。
 
-接口地址：${api_domain}/api/risk/review/order/create/v1
+接口地址：${api_domain}/api/review/order/create/v1
 
 请求参数：
 
@@ -431,7 +431,7 @@ SUCCESS
 ### 3.9 风控线下专家审核下单-更新人审订单信息
 人审结果为“需完善信息”时，需要更新人审订单信息。
 
-接口地址：${api_domain}/api/risk/review/order/updata/v1
+接口地址：${api_domain}/api/review/order/updata/v1
 
 请求参数：
 
@@ -474,7 +474,7 @@ SUCCESS
 
 
 ### 3.10 人审结果查询
-接口地址：${api_domain}/api/risk/review/order/query/v1
+接口地址：${api_domain}/api/review/order/query/v1
 
 请求参数：
 
