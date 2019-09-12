@@ -8,9 +8,9 @@
 ### 1.1 总体架构
 ![总体架构图](img/str.png)
 ### 1.2 对接场景
-![时序图](img/seq_e.png)
+![时序图](img/seq_v2.png)
 ### 1.3 对接准备
- > * step1 向机蜜申请接口调用凭证信息(appid、secret、api_domain)；
+ > * step1 向机蜜申请接口调用凭证信息(appId、password、api_domain)；
  > * step2 向机蜜申请获取调试环境；（注意：测试环境为http协议，而生产环境为https协议）
  > * step3 根据接口文档开发对接接口；
  > * step4 提供服务器IP给机蜜配置白名单；
@@ -30,8 +30,7 @@
 {
     "id":"517080601011",
     "appid":"jimi",
-    "name":"xx",
-    "sign":""
+    "name":"xx"
 }
 ```
 
@@ -60,19 +59,22 @@
 ```
 
 ### 2.3 签名算法
-为确保接口访问安全，接口的请求和响应应对所有参数使用对称加密算法做签名校验。请求和响应均在header中加入签名参数。
-    
+为确保接口访问安全，接口的请求应对所有参数使用对称加密算法做签名校验。请求在header中加入签名参数。
+
 Header参数：
 
 | 名称    | 含义   |  类型  | 是否必填 | 备注            |
 | :----   | :----  | :----  | :--      | :-------------  |
-| appid |    应用唯一标识    |  varchar(15)  | Y | - |
-| timestamp |    时间戳    |  varchar(15)  | Y | 时区GMT+8以秒为单位的时间戳 |
-| sign    |    签名    |  varchar(15)  | Y | - |
+| appId |    应用唯一标识    |  varchar(32)  | Y | - |
+| timestamp |    时间戳    |  varchar(32)  | Y | 时区GMT+8以秒为单位的时间戳 |
+| deviceId |    设备标识    |  varchar(32)  | Y | 设备唯一标识 |
+| OSVersion |    系统版本   |  varchar(32)  | Y | 系统版本号 |
+| userId |    用户id   |  varchar(32)  | Y | - |
+| sign   |    签名    |  varchar(32)  | Y | - |
 
 签名算法：
 
- > * step1：把所有参数（包括appid、secret、timestamp）的key和值拼成字符串放入到数组，得到 array = ['key2=value2','key1=value1']
+ > * step1：把参数（appId，password，timestamp，deviceId，OSVersion，userId，body）的key和值value拼成字符串放入到数组，（其中body值是请求body进行Base64.encodeBase64String转化的结果），得到 array = ['key2=value2','key1=value1']
  > * step2：把数组按照ascii码进行升序排序，得到 array = ['key1=value1','key2=value2']
  > * step3：把数组的元素用&拼成一个字符串，得到 source = 'key1=value1&key2=value2'
  > * step4：根据step3得到的source生成MD5加密值，并转成大写，生成签名。sign=toUpperCase(Md5(source))
@@ -84,7 +86,7 @@ Header参数：
 
 ## 3. 接口列表
 
-### 3.1 更新密钥接口
+### 3.1 更新密钥接口-(算法签名更新，暂时停用)
 为避免密钥泄露导致安全事故，对接方应定期调用此接口更新密钥。
 
 接口地址：${api_domain}/api/open/secret/update/v1
@@ -116,8 +118,7 @@ Header参数：
 ```
 
 
-
-### 3.2 确认密钥接口
+### 3.2 确认密钥接口-(算法签名更新，暂时停用)
 更新密钥之后，可以使用新密钥来确认密钥是否更新成功。
 
 接口地址：${api_domain}/api/open/secret/confirm/v1
@@ -195,7 +196,7 @@ Header参数：
 ### 3.4 风控聚合模型审核下单
 风控审核下单。
 
-接口地址：${api_domain}/api/risk/order/enterprise/create/v3
+接口地址：${api_domain}/api/risk/order/create/v1
 
 请求参数：
 
@@ -203,16 +204,17 @@ Header参数：
 | :----   | :----  | :----  | :--      | :-------------  |
 | callback| 回调地址 |   varchar(200) | Y | - |
 | transactionId| 事务id |   varchar(50) | Y | - |
+| uniqueId| 唯一id |   varchar(50) | Y | 请求唯一id |
 | clientId| 调用方下单唯一标识 | varchar(50) | Y | 同一个clientId不能重复下单 |
-| strategyId| 风控策略唯一标识 | varchar(32) | Y | - |
+| routeMatchType| 路由匹配类型 | varchar(50) | Y | 机蜜分配 |
+| routeGroupMark| 路由组标识 | varchar(50) | Y | 机蜜分配 |
 | idcardNum | 下单人身份证号 | varchar(50) | Y | - |
 | idcardName | 下单人身份证姓名 | varchar(50) | Y | - |
 | phone | 下单人手机号 | varchar(20) | Y | - |
-| legalPersonName | 法人身份证姓名 | varchar(50) | Y | - |
-| legalPersonCardId | 法人身份证号 | varchar(50) | Y | - |
-| legalPersonPhone | 法人手机号 | varchar(20) | Y | - |
-| enterpriseName | 企业名称 | varchar(100) | Y | - |
-| enterpriseCreditCode | 企业信用代码 | varchar(100) | Y | - |
+| provice | 用户收货地址-省 | varchar(50) | Y | - |
+| city | 用户收货地址-市 | varchar(50) | Y | - |
+| regoin | 用户收货地址-区县 | varchar(50) | Y | - |
+| address | 用户收货地址-详细地址 | varchar(100) | Y | - |
 | extend | 业务方独有数据源 | varchar(1000) | N | 扩展数据(三方独有数据)；json格式；作用：配合策略规则评分 |
 
 请求示例：
@@ -221,19 +223,19 @@ Header参数：
 {
     "callback":"",
     "transactionId":"",
+    "uniqueId":"",
     "clientId":"",
-    "strategyId":"",
+    "routeMatchType":"",
+    "routeGroupMark":"",
     "idcardNum":"",
     "idcardName":"",
     "phone":"",
-    "legalPersonName":"",
-    "legalPersonCardId":"",
-    "legalPersonPhone":"",
-    "enterpriseName":"",
-    "enterpriseCreditCode":"",
+    "provice":"",
+    "city":"",
+    "regoin":"",
+    "address":"",
     "extend":{
-    	"jm_huabei_disabled":"true",
-    	"jm_tongxunlu_uploaded":"true"
+    	"sceneType":"app"
     }
 }
 ```
@@ -270,7 +272,7 @@ Header参数：
 | :----   | :----  | :----  | :--      | :-------------  |
 | id | 风控订单号 |   varchar(32) | Y | - |
 | clientId | 调用方唯一标识 |   varchar(50) | Y | - |
-| pldResult | 风控聚合自动审核结果 |   varchar(10) | Y | PASS-通过；REJECT-拒绝；REVIEW-人审 |
+| pldResult | 风控聚合自动审核结果 |   varchar(10) | Y | PASS-通过；REJECT-拒绝；REVIEW-需人审 |
 | pldMsg   | 风控异常信息 | varchar(200) | N | - |
 
 
@@ -280,7 +282,7 @@ Header参数：
 {
     "id":"00000000001",
     "clientId":"00000000001",
-    "pldResult":"pass"
+    "pldResult":"PASS"
 }
 ```
 响应参数：字符串
@@ -294,7 +296,7 @@ SUCCESS
 
 
 ### 3.6 风控结果查询
-接口地址：${api_domain}/api/risk/order/enterprise/query/v3
+接口地址：${api_domain}/api/risk/order/query/v1
 
 请求参数：
 
@@ -317,10 +319,6 @@ SUCCESS
 | :----   | :----  | :----  | :--      | :-------------  |
 | pldResult | 风控结果 |   varchar(10) | Y | PASS-通过；REJECT-拒绝；REVIEW-人审 |
 | pldMsg   | 风控异常信息 | varchar(200) | N | - |
-| **pldDetail** | 聚合风控命中明细 | [{}] | Y |[{"id":"","name":"","value":""}] |
-| --id | 命中规则id标识 |   varchar(32) | Y | - |
-| --name | 命中规则名称 |   varchar(100) | Y | - |
-| --value | 命中规则值 |   varchar(100) | Y | - |
 
 
 响应示例：
@@ -329,28 +327,17 @@ SUCCESS
 {
     "code":"200",
     "data":{
-        "pldResult":"pass",
-        "pldDetail":[
-        {
-            "id":"2",
-            "name":"身份证号和上传的身份证是否一致",
-            "value":"是"
-        },
-        {
-            "id":"2",
-            "name":"手机号和上传的手机号是否一致",
-            "value":"是"
-        }
-        ]
+        "pldResult":"PASS"
     }
 }
 ```
 
 
+
 ### 3.7 风控线下专家审核下单
 线下人审审核下单。
 
-接口地址：${api_domain}/api/risk/review/order/create/v3
+接口地址：${api_domain}/api/risk/review/order/create/v1
 
 请求参数：
 
@@ -359,6 +346,7 @@ SUCCESS
 | callback| 回调地址 |   varchar(200) | Y | - |
 | transactionId| 事务id |   varchar(50) | Y | - |
 | clientId| 调用方唯一标识 |   varchar(50) | Y | - |
+| riskOrderId| 风控订单id |   varchar(50) | Y | - |
 | userId    |   下单用户唯一标识   |   varchar(50)   | Y | - |
 | name    |   下单用户姓名   |   varchar(50)   | Y | - |
 | phone   |    下单用户手机    |  varchar(15)  | Y | - |
@@ -373,13 +361,13 @@ SUCCESS
     "callback":"",
     "transactionId":"",
     "clientId":"",
+    "riskOrderId":"",
     "userId":"",
     "name":"",
     "phone":"",
     "urlDetail":"",
     "dataDetail":{
-    	"enterpriseName":"企业名称举例",
-    	"legalPersonName":"法人姓名举例"
+    	"orderId":"订单号举例"
     }
 }
 ```
@@ -402,6 +390,7 @@ SUCCESS
     }
 }
 ```
+
 
 
 
@@ -442,7 +431,7 @@ SUCCESS
 ### 3.9 风控线下专家审核下单-更新人审订单信息
 人审结果为“需完善信息”时，需要更新人审订单信息。
 
-接口地址：${api_domain}/api/risk/review/order/updata/v3
+接口地址：${api_domain}/api/risk/review/order/updata/v1
 
 请求参数：
 
@@ -461,8 +450,7 @@ SUCCESS
     "clientId":"",
     "urlDetail":"",
     "dataDetail":{
-    	"enterpriseName":"企业名称举例",
-    	"legalPersonName":"法人姓名举例"
+    	"orderId":"订单号举例"
     }
 }
 ```
@@ -486,7 +474,7 @@ SUCCESS
 
 
 ### 3.10 人审结果查询
-接口地址：${api_domain}/api/risk/review/order/query/v3
+接口地址：${api_domain}/api/risk/review/order/query/v1
 
 请求参数：
 
@@ -527,7 +515,7 @@ SUCCESS
 
 
 ### 3.11 数据上报
-接口地址：${api_domain}/api/risk/feedback/enterprise/upload/v1
+接口地址：${api_domain}/api/risk/feedback/upload/v1
 
 请求参数：
 
