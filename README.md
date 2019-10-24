@@ -193,8 +193,8 @@ Header参数：
 
 
 
-### 3.4 风控聚合模型审核下单
-风控审核下单。
+### 3.4.1 风控聚合模型审核下单-v1版本
+风控审核下单v1版本，单个用户主体跑风控。（建议使用新版本下单接口）
 
 接口地址：${api_domain}/api/risk/order/create/v1
 
@@ -221,21 +221,21 @@ Header参数：
 
 ```javascript
 {
-    "callback":"",
-    "transactionId":"",
-    "uniqueId":"",
-    "clientId":"",
-    "routeMatchType":"",
-    "routeGroupMark":"",
-    "idcardNum":"",
-    "idcardName":"",
-    "phone":"",
-    "provice":"",
-    "city":"",
-    "regoin":"",
-    "address":"",
-    "extend":{
-    	"sceneType":"app"
+    "callback": "",
+    "transactionId": "",
+    "uniqueId": "",
+    "clientId": "",
+    "routeMatchType": "",
+    "routeGroupMark": "",
+    "idcardNum": "",
+    "idcardName": "",
+    "phone": "",
+    "provice": "",
+    "city": "",
+    "regoin": "",
+    "address": "",
+    "extend": {
+        "sceneType": "app"
     }
 }
 ```
@@ -259,6 +259,95 @@ Header参数：
 }
 ```
 
+
+### 3.4.2 风控聚合模型审核下单-v2版本
+风控审核下单v2版本，支持一个或者多个用户主体跑风控。
+
+接口地址：${api_domain}/api/risk/order/create/v2
+
+请求参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| callback| 回调地址 |   varchar(200) | Y | - |
+| transactionId| 事务id |   varchar(50) | Y | - |
+| uniqueId| 唯一id |   varchar(50) | Y | 请求唯一id |
+| clientId| 调用方下单唯一标识 | varchar(50) | Y | 同一个clientId不能重复下单 |
+| routeMatchType| 路由匹配类型 | varchar(50) | Y | 机蜜分配 |
+| routeGroupMark| 路由组标识 | varchar(50) | Y | 机蜜分配 |
+| extend | 业务方独有数据源 | varchar(1000) | Y | 扩展数据(三方独有数据)；json格式；作用：配合策略规则评分；机蜜约定 |
+| subjects| 用户主体 | [{}] | Y | 跑风控主体列表，数组形式 |
+
+Subject：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| type | 用户主体类型 | varchar(100) | Y | 机蜜分配 |
+| idcardNum | 主体身份证号 | varchar(50) | Y | - |
+| idcardName | 主体身份证姓名 | varchar(50) | Y | - |
+| phone | 主体手机号 | varchar(20) | Y | - |
+| provice | 主体收货地址-省 | varchar(50) | N | - |
+| city | 主体收货地址-市 | varchar(50) | N | - |
+| regoin | 主体收货地址-区县 | varchar(50) | N | - |
+| address | 主体收货地址-详细地址 | varchar(100) | N | - |
+| extend | 主体扩展参数 | varchar(100) | N | - |
+
+请求示例：
+
+```javascript
+{
+    "callback": "",
+    "transactionId": "",
+    "uniqueId": "",
+    "clientId": "",
+    "routeMatchType": "",
+    "routeGroupMark": "",
+    "extend": {
+        "sceneType": "app"
+    },
+    "subjects": [
+        {
+            "type": "",
+            "idcardNum": "",
+            "idcardName": "",
+            "phone": "",
+            "provice": "",
+            "city": "",
+            "regoin": "",
+            "address": ""
+        },
+        {
+            "type": "",
+            "idcardNum": "",
+            "idcardName": "",
+            "phone": "",
+            "provice": "",
+            "city": "",
+            "regoin": "",
+            "address": ""
+        }
+    ]
+}
+```
+
+响应参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| id   | 风控订单号 | varchar(32) | Y | - |
+| clientId| 调用方唯一标识 |   varchar(50) | Y | - |
+
+响应示例：
+
+```
+{
+    "code":"200",
+    "data":{
+        "id":"000000000000000000001",
+        "clientId":"000000000000000000001"
+    }
+}
+```
 
 
 ### 3.5 风控结果通知推送
