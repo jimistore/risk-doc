@@ -281,6 +281,7 @@ Header参数：
 | routeGroupMark| 路由组标识 | varchar(50) | Y | 机蜜分配 |
 | extend | 业务方独有数据源 | varchar(1000) | Y | 扩展数据(三方独有数据)；json格式；作用：配合策略规则评分；机蜜约定 |
 | subjects| 用户主体 | [{}] | Y | 跑风控主体列表，数组形式 |
+| strategyId| 策略id | varchar(32) | N | 传参则使用该策略，取值来源接口3.4.3 |
 
 Subject：
 
@@ -353,6 +354,42 @@ Subject：
 }
 ```
 
+### 3.4.3 风控策略查询
+提供风控策略查询接口。
+
+接口地址：${api_domain}/api/risk/proxy/strategy/list/v1
+
+请求参数：
+无
+
+
+响应参数：
+
+| 名称    | 含义   |  类型  | 是否必填 | 备注            |
+| :----   | :----  | :----  | :--      | :-------------  |
+| strategyId   | 策略id | varchar(32) | Y | - |
+| strategyName | 策略名称 | varchar(50) | Y | - |
+| publishTime | 发布时间 | varchar(50) | Y | 策略发布时间 |
+
+响应示例：
+
+```
+{
+    "code": "200",
+    "data": [
+        {
+            "strategyId": "2",
+            "strategyName": "策略2",
+            "publishTime":"2020-02-02 10:30:00"
+        },
+        {
+            "strategyId": "1",
+            "strategyName": "策略1",
+            "publishTime":"2020-02-01 10:30:00"
+        }
+    ]
+}
+```
 
 
 ### 3.5 风控结果通知推送
